@@ -1,0 +1,87 @@
+@import "tailwindcss";
+
+@theme {
+  --color-gold: #c8a96b;
+  --color-gold-light: #e2c992;
+  --color-gold-dark: #a68b4b;
+  --color-charcoal: #0a0a0a;
+  --color-charcoal-light: #141414;
+  --color-charcoal-mid: #1a1a1a;
+  --color-charcoal-soft: #222222;
+  --font-display: "Cormorant Garamond", Georgia, serif;
+  --font-body: "Inter", system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-charcoal);
+  color: #fafafa;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: rgba(200, 169, 107, 0.35);
+  color: #fff;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.glass-card {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.06) 0%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.gold-gradient-text {
+  background: linear-gradient(135deg, #e2c992 0%, #c8a96b 50%, #a68b4b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.luxury-gradient {
+  background: linear-gradient(
+    180deg,
+    rgba(10, 10, 10, 0.3) 0%,
+    rgba(10, 10, 10, 0.85) 60%,
+    #0a0a0a 100%
+  );
+}
+
+.section-padding {
+  @apply px-4 py-16 sm:px-5 sm:py-20 md:px-10 md:py-32 lg:px-16 lg:py-40;
+}
+
+.btn-primary {
+  @apply inline-flex items-center justify-center gap-2 rounded-sm border border-gold bg-gold/10 px-6 py-3.5 text-xs font-medium tracking-[0.18em] uppercase text-gold transition-all duration-500 hover:bg-gold hover:text-charcoal sm:px-8 sm:py-4 sm:text-sm sm:tracking-[0.2em];
+}
+
+.btn-outline {
+  @apply inline-flex items-center justify-center gap-2 rounded-sm border border-white/20 bg-white/5 px-6 py-3.5 text-xs font-medium tracking-[0.18em] uppercase text-white backdrop-blur-sm transition-all duration-500 hover:border-gold hover:text-gold sm:px-8 sm:py-4 sm:text-sm sm:tracking-[0.2em];
+}
+
+@media (max-width: 639px) {
+  .btn-mobile-full {
+    @apply w-full;
+  }
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
