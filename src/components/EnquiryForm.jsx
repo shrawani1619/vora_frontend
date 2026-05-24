@@ -1,141 +1,116 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import SectionHeading from "./ui/SectionHeading";
+import Reveal from "./ui/Reveal";
+
+const fieldClass =
+  "w-full border-0 border-b border-charcoal/20 bg-transparent py-4 font-medium text-charcoal placeholder:text-charcoal/45 outline-none transition-colors duration-500 focus:border-blue";
 
 export default function EnquiryForm() {
   const [form, setForm] = useState({ name: "", phone: "", email: "", message: "" });
-  const [submitted, setSubmitted] = useState(false);
+  const [done, setDone] = useState(false);
 
-  const handleChange = (e) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
-
-  const handleSubmit = (e) => {
+  const onChange = (e) => setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
+  const onSubmit = (e) => {
     e.preventDefault();
-    setSubmitted(true);
+    setDone(true);
   };
 
   return (
-    <section id="enquiry" className="section-padding relative bg-charcoal">
-      <div
-        className="absolute inset-0 opacity-10"
-        style={{
-          backgroundImage:
-            "url(https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1920&q=60)",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      />
-      <motion.div
-        initial={{ opacity: 0, y: 40 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="relative mx-auto max-w-7xl"
-      >
-        <div className="grid items-start gap-10 sm:gap-12 lg:grid-cols-2 lg:gap-16">
-          <div>
-            <SectionHeading
-              eyebrow="Get In Touch"
-              title="Schedule Your Private Tour"
-              subtitle="Experience Vora Signature Residences firsthand. Our relationship managers are ready to assist you."
-              align="left"
-            />
-
-            <div className="space-y-6">
-              {[
-                { label: "Sales Gallery Hours", value: "10:00 AM – 7:00 PM, All Days" },
-                { label: "Virtual Tour", value: "Available on Request" },
-                { label: "Response Time", value: "Within 2 Hours" },
-              ].map((item) => (
-                <motion.div key={item.label} className="border-l border-gold/30 pl-6">
-                  <p className="text-xs tracking-[0.2em] uppercase text-white/40">{item.label}</p>
-                  <p className="mt-1 text-white/80">{item.value}</p>
-                </motion.div>
-              ))}
-            </div>
-          </div>
+    <section id="enquiry" className="section-luxury bg-beige">
+      <div className="container-luxury">
+        <div className="grid items-start gap-12 lg:grid-cols-12 lg:gap-20">
+          <Reveal className="lg:col-span-5">
+            <span className="text-gold-label text-[10px] uppercase">Private Consultation</span>
+            <div className="gold-line my-6" />
+            <h2 className="font-display text-3xl font-semibold leading-[1.1] text-charcoal sm:text-4xl md:text-5xl lg:text-6xl">
+              Reserve Your
+              <br />
+              Site Visit
+            </h2>
+            <p className="mt-8 text-sm font-medium leading-[1.85] text-charcoal/85 sm:text-base">
+              Our relationship managers offer personalised walkthroughs, virtual tours, and
+              bespoke consultation — by appointment only.
+            </p>
+            <ul className="mt-10 space-y-4 text-sm font-medium text-charcoal/85">
+              <li className="flex gap-4 border-l border-gold-bright/50 pl-4">
+                Gallery hours: 10 AM – 7 PM
+              </li>
+              <li className="flex gap-4 border-l border-gold-bright/50 pl-4">
+                Response within 2 hours
+              </li>
+            </ul>
+          </Reveal>
 
           <motion.form
-            onSubmit={handleSubmit}
-            initial={{ opacity: 0, x: 40 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            onSubmit={onSubmit}
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="glass-card rounded-sm p-5 sm:p-8 md:p-10"
+            transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
+            className="glass-luxury p-8 sm:p-12 lg:col-span-7"
           >
-            {submitted ? (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="py-16 text-center"
-              >
-                <p className="font-display text-3xl text-gold">Thank You</p>
-                <p className="mt-4 text-white/60">
-                  Our team will contact you shortly to confirm your site visit.
+            {done ? (
+              <div className="py-16 text-center">
+                <p className="font-display text-3xl text-blue">Thank You</p>
+                <p className="mt-4 text-sm font-medium text-charcoal/85">
+                  We will contact you shortly to confirm your private tour.
                 </p>
-              </motion.div>
+              </div>
             ) : (
               <>
-                <motion.div
-                  className="grid gap-6 md:grid-cols-2"
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true }}
-                  variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
-                >
+                <div className="grid gap-8 sm:grid-cols-2">
                   {[
-                    { name: "name", label: "Full Name", type: "text", placeholder: "Your name", full: false },
-                    { name: "phone", label: "Phone Number", type: "tel", placeholder: "+91 98765 43210", full: false },
-                    { name: "email", label: "Email Address", type: "email", placeholder: "you@email.com", full: true },
-                  ].map((field) => (
-                    <motion.div
-                      key={field.name}
-                      variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
-                      className={field.full ? "md:col-span-2" : ""}
-                    >
-                      <label htmlFor={field.name} className="mb-2 block text-xs tracking-[0.15em] uppercase text-white/50">
-                        {field.label}
+                    { id: "name", label: "Full Name", type: "text" },
+                    { id: "phone", label: "Phone", type: "tel" },
+                  ].map((f) => (
+                    <div key={f.id}>
+                      <label htmlFor={f.id} className="text-[10px] tracking-[0.28em] uppercase text-gray">
+                        {f.label}
                       </label>
                       <input
-                        id={field.name}
-                        name={field.name}
-                        type={field.type}
+                        id={f.id}
+                        name={f.id}
+                        type={f.type}
                         required
-                        value={form[field.name]}
-                        onChange={handleChange}
-                        placeholder={field.placeholder}
-                        className="w-full border border-white/10 bg-white/5 px-4 py-3.5 text-white placeholder-white/25 outline-none transition-colors focus:border-gold/50"
+                        value={form[f.id]}
+                        onChange={onChange}
+                        className={fieldClass}
                       />
-                    </motion.div>
+                    </div>
                   ))}
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.3 }}
-                  className="mt-6"
-                >
-                  <label htmlFor="message" className="mb-2 block text-xs tracking-[0.15em] uppercase text-white/50">
+                </div>
+                <div className="mt-8">
+                  <label htmlFor="email" className="text-[10px] font-semibold tracking-[0.28em] uppercase text-charcoal/75">
+                    Email
+                  </label>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    required
+                    value={form.email}
+                    onChange={onChange}
+                    className={fieldClass}
+                  />
+                </div>
+                <div className="mt-8">
+                  <label htmlFor="message" className="text-[10px] font-semibold tracking-[0.28em] uppercase text-charcoal/75">
                     Message
                   </label>
                   <textarea
                     id="message"
                     name="message"
-                    rows={4}
+                    rows={3}
                     value={form.message}
-                    onChange={handleChange}
-                    placeholder="Tell us about your preferences..."
-                    className="w-full resize-none border border-white/10 bg-white/5 px-4 py-3.5 text-white placeholder-white/25 outline-none transition-colors focus:border-gold/50"
+                    onChange={onChange}
+                    className={`${fieldClass} resize-none`}
                   />
-                </motion.div>
-
+                </div>
                 <motion.button
                   type="submit"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="btn-primary mt-8 w-full"
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.99 }}
+                  className="btn-luxury-primary mt-10 w-full"
                 >
                   Book Site Visit
                 </motion.button>
@@ -143,7 +118,7 @@ export default function EnquiryForm() {
             )}
           </motion.form>
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 }

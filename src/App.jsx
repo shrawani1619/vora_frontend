@@ -2,8 +2,9 @@ import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import About from "./components/About";
 import ProjectHighlights from "./components/ProjectHighlights";
-import ProjectOverview from "./components/ProjectOverview";
+import ArchitecturalBanner from "./components/ArchitecturalBanner";
 import Amenities from "./components/Amenities";
+import ProjectOverview from "./components/ProjectOverview";
 import Gallery from "./components/Gallery";
 import FloorPlan from "./components/FloorPlan";
 import Location from "./components/Location";
@@ -14,14 +15,15 @@ import FloatingButtons from "./components/FloatingButtons";
 
 export default function App() {
   return (
-  <>
+    <>
       <Navbar />
-      <main className="pb-24 sm:pb-0">
+      <main>
         <Hero />
         <About />
         <ProjectHighlights />
-        <ProjectOverview />
+        <ArchitecturalBanner />
         <Amenities />
+        <ProjectOverview />
         <Gallery />
         <FloorPlan />
         <Location />

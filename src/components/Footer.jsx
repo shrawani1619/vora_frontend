@@ -1,111 +1,225 @@
 import { motion } from "framer-motion";
-import { FaFacebookF, FaInstagram, FaLinkedinIn, FaYoutube } from "react-icons/fa";
-import { HiOutlineMail, HiOutlinePhone, HiOutlineLocationMarker } from "react-icons/hi";
-import { NAV_LINKS, CONTACT } from "../data/content";
+import {
+  HiOutlineMail,
+  HiOutlinePhone,
+  HiOutlineLocationMarker,
+  HiOutlineArrowRight,
+} from "react-icons/hi";
+import { FaInstagram, FaLinkedinIn, FaFacebookF, FaYoutube } from "react-icons/fa";
+import { NAV_LINKS, CONTACT, SOCIAL_LINKS } from "../data/content";
 import Logo from "./ui/Logo";
 
-const SOCIAL = [
-  { icon: FaInstagram, href: "#", label: "Instagram" },
-  { icon: FaFacebookF, href: "#", label: "Facebook" },
-  { icon: FaLinkedinIn, href: "#", label: "LinkedIn" },
-  { icon: FaYoutube, href: "#", label: "YouTube" },
-];
+const ease = [0.22, 1, 0.36, 1];
+
+const SOCIAL_ICONS = {
+  instagram: FaInstagram,
+  linkedin: FaLinkedinIn,
+  facebook: FaFacebookF,
+  youtube: FaYoutube,
+};
+
+function ContactItem({ icon: Icon, children, href }) {
+  const content = (
+    <>
+      <span className="flex h-[18px] w-[18px] shrink-0 items-center justify-center text-gold-dark">
+        <Icon size={16} strokeWidth={1.5} />
+      </span>
+      <span className="min-w-0 flex-1 pt-px text-sm font-medium leading-snug text-charcoal/85">
+        {children}
+      </span>
+    </>
+  );
+
+  if (href) {
+    return (
+      <li>
+        <a
+          href={href}
+          className="group flex items-center gap-2.5 transition-colors duration-500 hover:text-blue"
+        >
+          {content}
+        </a>
+      </li>
+    );
+  }
+
+  return (
+    <li className="flex items-start gap-2.5">
+      {content}
+    </li>
+  );
+}
+
+function FooterColumn({ title, children, delay = 0, className = "" }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 0.9, delay, ease }}
+      className={className}
+    >
+      <p className="text-gold-label text-[10px] uppercase tracking-[0.32em]">{title}</p>
+      <div className="mt-1 h-px w-10 bg-gradient-to-r from-gold-bright to-transparent" />
+      <div className="mt-6">{children}</div>
+    </motion.div>
+  );
+}
 
 export default function Footer() {
+  const year = new Date().getFullYear();
+
+  const scrollTo = (href) => {
+    document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
-    <footer className="border-t border-white/5 bg-charcoal">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-5 sm:py-16 md:px-10 md:py-20 lg:px-16">
-        <div className="grid gap-10 sm:gap-12 md:grid-cols-2 lg:grid-cols-4">
+    <footer className="text-charcoal">
+      {/* CTA band */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-blue via-blue-dark to-[#083a7a] px-6 py-14 sm:px-10 sm:py-16 lg:px-20 lg:py-20">
+        <div
+          className="pointer-events-none absolute inset-0 opacity-30"
+          aria-hidden
+          style={{
+            backgroundImage:
+              "radial-gradient(circle at 20% 50%, rgba(200,169,107,0.35) 0%, transparent 45%), radial-gradient(circle at 80% 20%, rgba(255,255,255,0.12) 0%, transparent 40%)",
+          }}
+        />
+        <motion.div
+          initial={{ opacity: 0, y: 28 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1, ease }}
+          className="footer-cta-glass relative mx-auto flex max-w-[1320px] flex-col items-start justify-between gap-8 rounded-sm px-8 py-10 sm:flex-row sm:items-center sm:px-12 sm:py-12"
+        >
           <div>
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              <Logo className="h-16 w-auto md:h-20" />
-              <p className="mt-3 text-[10px] tracking-[0.3em] uppercase text-white/40">
-                Luxury Living Redefined
-              </p>
-            </motion.div>
-            <p className="mt-6 text-sm leading-relaxed font-light text-white/50">
-              Crafting landmark residences that embody sophistication, comfort, and
-              enduring value for discerning homeowners.
+            <p className="text-[10px] font-semibold tracking-[0.32em] text-gold-bright uppercase">
+              Private Consultation
+            </p>
+            <h3 className="font-display mt-3 text-2xl font-semibold text-white sm:text-3xl md:text-4xl">
+              Experience Vora Signature
+            </h3>
+            <p className="mt-3 max-w-md text-sm font-medium leading-relaxed text-white/75">
+              Schedule an exclusive site visit with our relationship managers.
             </p>
           </div>
+          <a
+            href="#enquiry"
+            onClick={(e) => {
+              e.preventDefault();
+              scrollTo("#enquiry");
+            }}
+            className="btn-footer-gold group shrink-0"
+          >
+            Book Site Visit
+            <HiOutlineArrowRight
+              className="transition-transform duration-500 group-hover:translate-x-1"
+              size={16}
+            />
+          </a>
+        </motion.div>
+      </div>
 
-          <div>
-            <h4 className="mb-6 text-xs tracking-[0.3em] uppercase text-gold">Navigation</h4>
-            <ul className="space-y-3">
-              {NAV_LINKS.map((link) => (
-                <li key={link.href}>
-                  <a
-                    href={link.href}
-                    className="text-sm text-white/50 transition-colors hover:text-gold"
-                  >
-                    {link.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
+      {/* Main footer */}
+      <div className="border-t-2 border-gold-bright/30 bg-white">
+        <div className="container-luxury px-6 py-16 sm:px-10 sm:py-20 lg:px-20 lg:py-24">
+          <div className="grid gap-14 sm:grid-cols-2 lg:grid-cols-12 lg:gap-12 xl:gap-16">
+            <FooterColumn title="Vora Realtors" className="sm:col-span-2 lg:col-span-4" delay={0}>
+              <Logo className="h-20 w-auto sm:h-24" />
+              <p className="mt-6 max-w-sm text-sm font-medium leading-[1.85] text-charcoal/80">
+                Crafting landmark residences for discerning homeowners across Hyderabad&apos;s
+                most prestigious corridors since 2010.
+              </p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                {SOCIAL_LINKS.map((social) => {
+                  const Icon = SOCIAL_ICONS[social.icon];
+                  return (
+                    <a
+                      key={social.label}
+                      href={social.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={social.label}
+                      className="footer-social"
+                    >
+                      <Icon size={17} />
+                    </a>
+                  );
+                })}
+              </div>
+            </FooterColumn>
+
+            <FooterColumn title="Explore" className="lg:col-span-2" delay={0.08}>
+              <ul className="space-y-3.5">
+                {NAV_LINKS.map((link) => (
+                  <li key={link.href}>
+                    <a
+                      href={link.href}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        scrollTo(link.href);
+                      }}
+                      className="footer-link"
+                    >
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </FooterColumn>
+
+            <FooterColumn title="Contact" className="lg:col-span-3" delay={0.12}>
+              <ul className="flex flex-col gap-3">
+                <ContactItem icon={HiOutlineLocationMarker}>{CONTACT.address}</ContactItem>
+                <ContactItem icon={HiOutlinePhone} href={`tel:${CONTACT.phone.replace(/\s/g, "")}`}>
+                  {CONTACT.phone}
+                </ContactItem>
+                <ContactItem icon={HiOutlineMail} href={`mailto:${CONTACT.email}`}>
+                  {CONTACT.email}
+                </ContactItem>
+              </ul>
+            </FooterColumn>
+
+            <FooterColumn title="Compliance" className="lg:col-span-3" delay={0.16}>
+              <div className="rounded-sm border border-charcoal/8 bg-warm-white/80 p-6 backdrop-blur-sm">
+                <p className="text-[10px] font-bold tracking-[0.24em] text-charcoal/60 uppercase">
+                  RERA Registration
+                </p>
+                <p className="mt-3 font-display text-xl font-semibold text-blue">{CONTACT.rera}</p>
+                <p className="mt-4 text-xs font-medium leading-relaxed text-charcoal/65">
+                  Images, renders, and specifications are indicative. Subject to approval and
+                  availability.
+                </p>
+              </div>
+            </FooterColumn>
           </div>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="mt-16 border-t border-charcoal/10 pt-8 sm:mt-20"
           >
-            <h4 className="mb-6 text-xs tracking-[0.3em] uppercase text-gold">Contact</h4>
-            <ul className="space-y-4">
-              <li className="flex items-start gap-3 text-sm text-white/50">
-                <HiOutlineLocationMarker className="mt-0.5 shrink-0 text-gold" />
-                {CONTACT.address}
-              </li>
-              <li>
-                <a
-                  href={`tel:${CONTACT.phone.replace(/\s/g, "")}`}
-                  className="flex items-center gap-3 text-sm text-white/50 transition-colors hover:text-gold"
-                >
-                  <HiOutlinePhone className="shrink-0 text-gold" />
-                  {CONTACT.phone}
+            <div className="flex flex-col items-center justify-between gap-6 text-center sm:flex-row sm:text-left">
+              <p className="text-xs font-medium text-charcoal/65">
+                &copy; {year} Vora Realtors. All rights reserved.
+              </p>
+              <div className="flex flex-wrap items-center justify-center gap-6 sm:justify-end">
+                <a href="#hero" className="footer-link text-xs">
+                  Privacy Policy
                 </a>
-              </li>
-              <li>
-                <a
-                  href={`mailto:${CONTACT.email}`}
-                  className="flex items-center gap-3 text-sm text-white/50 transition-colors hover:text-gold"
-                >
-                  <HiOutlineMail className="shrink-0 text-gold" />
-                  {CONTACT.email}
+                <span className="hidden h-3 w-px bg-charcoal/15 sm:block" aria-hidden />
+                <a href="#hero" className="footer-link text-xs">
+                  Terms of Use
                 </a>
-              </li>
-            </ul>
-          </motion.div>
-
-          <div>
-            <h4 className="mb-6 text-xs tracking-[0.3em] uppercase text-gold">Follow Us</h4>
-            <div className="flex gap-3">
-              {SOCIAL.map(({ icon: Icon, href, label }) => (
-                <motion.a
-                  key={label}
-                  href={href}
-                  aria-label={label}
-                  whileHover={{ y: -4, borderColor: "rgba(200,169,107,0.6)" }}
-                  className="flex h-10 w-10 items-center justify-center border border-white/10 text-white/50 transition-colors hover:text-gold"
-                >
-                  <Icon size={16} />
-                </motion.a>
-              ))}
+                <span className="hidden h-3 w-px bg-charcoal/15 sm:block" aria-hidden />
+                <span className="text-xs font-medium tracking-wide text-gold-dark">
+                  Luxury Redefined
+                </span>
+              </div>
             </div>
-          </div>
-        </div>
-
-        <div className="mt-10 flex flex-col items-center justify-between gap-3 border-t border-white/5 pt-6 text-center sm:mt-16 sm:gap-4 sm:pt-8 md:flex-row md:text-left">
-          <p className="text-[11px] text-white/30 sm:text-xs">
-            &copy; {new Date().getFullYear()} Vora Realtors. All rights reserved.
-          </p>
-          <p className="text-[11px] leading-relaxed text-white/30 sm:text-xs">
-            RERA Reg. No. P02400001234 | Disclaimer: Images are for representation only.
-          </p>
+          </motion.div>
         </div>
       </div>
     </footer>

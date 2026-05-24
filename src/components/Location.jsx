@@ -8,7 +8,7 @@ import {
   HiOutlineHeart,
 } from "react-icons/hi";
 import { LOCATION_POINTS } from "../data/content";
-import SectionHeading from "./ui/SectionHeading";
+import Reveal from "./ui/Reveal";
 
 const ICONS = {
   school: HiOutlineAcademicCap,
@@ -21,83 +21,59 @@ const ICONS = {
 
 export default function Location() {
   return (
-    <section id="location" className="section-padding bg-charcoal">
-      <div className="mx-auto max-w-7xl">
-        <SectionHeading
-          eyebrow="Connectivity"
-          title="Location Advantages"
-          subtitle="Nestled in the Financial District — Hyderabad's most dynamic address for business, leisure, and living."
-        />
-
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="relative mb-10 aspect-[4/3] overflow-hidden rounded-sm border border-white/5 sm:mb-14 sm:aspect-[16/9] md:mb-16 md:aspect-[16/7]"
-        >
-          <iframe
-            title="Vora Signature Residences Location"
-            src="https://maps.google.com/maps?q=Financial+District+Hyderabad&t=&z=14&ie=UTF8&iwloc=&output=embed"
-            className="h-full w-full grayscale contrast-125 invert"
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-          />
-          <div className="pointer-events-none absolute inset-0 bg-charcoal/30" />
-          <div className="glass-card absolute right-3 bottom-3 left-3 max-w-none p-4 sm:right-auto sm:bottom-6 sm:left-6 sm:max-w-xs sm:p-6 md:bottom-8 md:left-8">
-            <p className="text-xs tracking-[0.3em] uppercase text-gold">Project Address</p>
-            <p className="mt-2 text-sm leading-relaxed text-white/70">
-              Vora Signature Residences, Financial District, Gachibowli, Hyderabad – 500032
+    <section id="location" className="section-luxury bg-warm-white">
+      <div className="container-luxury">
+        <div className="grid gap-12 lg:grid-cols-2 lg:gap-20">
+          <Reveal>
+            <span className="text-gold-label text-[10px] uppercase">Connectivity</span>
+            <div className="gold-line my-6" />
+            <h2 className="font-display text-3xl font-semibold text-charcoal sm:text-4xl md:text-5xl">
+              Location Advantages
+            </h2>
+            <p className="mt-6 text-sm font-medium leading-[1.85] text-charcoal/85 sm:text-base">
+              Nestled in Hyderabad&apos;s Financial District — minutes from global workplaces,
+              premier schools, and luxury retail.
             </p>
-          </div>
-        </motion.div>
 
-        <div className="relative">
-          <motion.div
-            initial={{ scaleX: 0 }}
-            whileInView={{ scaleX: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-            className="absolute top-8 right-0 left-0 hidden h-px origin-left bg-gradient-to-r from-transparent via-gold/40 to-transparent md:block"
-          />
+            <div className="relative mt-10 aspect-[4/3] overflow-hidden border border-charcoal/8 sm:mt-12">
+              <iframe
+                title="Location map"
+                src="https://maps.google.com/maps?q=Financial+District+Hyderabad&t=&z=14&ie=UTF8&iwloc=&output=embed"
+                className="h-full w-full grayscale contrast-[0.9] opacity-90"
+                loading="lazy"
+              />
+            </div>
+          </Reveal>
 
-          <div className="grid gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {LOCATION_POINTS.map((point, i) => {
-              const Icon = ICONS[point.icon];
-              return (
-                <motion.div
-                  key={point.title}
-                  initial={{ opacity: 0, x: i % 2 === 0 ? -30 : 30 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: i * 0.1 }}
-                  className="glass-card group relative rounded-sm p-5 transition-all duration-500 hover:border-gold/20 sm:p-6 md:p-8"
-                >
+          <div className="relative">
+            <div className="absolute top-0 bottom-0 left-[27px] hidden w-px bg-charcoal/10 sm:block" />
+            <div className="space-y-0">
+              {LOCATION_POINTS.map((point, i) => {
+                const Icon = ICONS[point.icon];
+                return (
                   <motion.div
-                    className="absolute -top-3 left-8 hidden h-6 w-6 items-center justify-center rounded-full border border-gold bg-charcoal md:flex"
-                    whileInView={{ scale: [0, 1.2, 1] }}
+                    key={point.title}
+                    initial={{ opacity: 0, x: 32 }}
+                    whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
-                    transition={{ delay: 0.3 + i * 0.1 }}
+                    transition={{ duration: 0.9, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
+                    className="group relative flex gap-6 border-b border-charcoal/8 py-8 sm:gap-8 sm:py-10"
                   >
-                    <span className="text-[10px] text-gold">{i + 1}</span>
+                    <div className="relative z-10 flex h-14 w-14 shrink-0 items-center justify-center border border-charcoal/10 bg-white transition-colors duration-700 group-hover:border-blue">
+                      <Icon className="h-5 w-5 text-blue" strokeWidth={1} />
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-semibold tracking-[0.28em] uppercase text-charcoal/75">
+                        {point.distance} · {point.time}
+                      </p>
+                      <h3 className="font-display mt-2 text-xl font-semibold text-charcoal sm:text-2xl">
+                        {point.title}
+                      </h3>
+                    </div>
                   </motion.div>
-
-                  <motion.div
-                    whileHover={{ scale: 1.1, rotate: 5 }}
-                    className="mb-4 flex h-12 w-12 items-center justify-center border border-gold/30 text-gold"
-                  >
-                    <Icon className="h-6 w-6" />
-                  </motion.div>
-
-                  <h3 className="font-display text-xl text-white">{point.title}</h3>
-                  <div className="mt-4 flex items-center gap-4">
-                    <span className="text-sm text-gold">{point.distance}</span>
-                    <span className="h-1 w-1 rounded-full bg-white/30" />
-                    <span className="text-sm text-white/50">{point.time} drive</span>
-                  </div>
-                </motion.div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>

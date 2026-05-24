@@ -6,10 +6,10 @@ import { useNavbarScroll } from "../hooks/useScrollReveal";
 import Logo from "./ui/Logo";
 
 export default function Navbar() {
-  const scrolled = useNavbarScroll();
+  const scrolled = useNavbarScroll(40);
   const [open, setOpen] = useState(false);
 
-  const handleNav = (href) => {
+  const go = (href) => {
     setOpen(false);
     document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
   };
@@ -17,60 +17,51 @@ export default function Navbar() {
   return (
     <>
       <motion.header
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-        className={`fixed top-0 right-0 left-0 z-50 transition-all duration-500 ${
-          scrolled
-            ? "border-b border-white/5 bg-charcoal/90 py-3 shadow-2xl shadow-black/40 backdrop-blur-xl"
-            : "bg-transparent py-4 sm:py-6"
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+        className={`fixed top-0 right-0 left-0 z-50 border-b border-charcoal/8 bg-white/98 text-charcoal shadow-[0_8px_40px_rgba(13,71,161,0.05)] backdrop-blur-md transition-all duration-500 ${
+          scrolled ? "py-4" : "py-5 md:py-6"
         }`}
       >
-        <nav className="mx-auto flex max-w-[1440px] items-center px-4 sm:px-5 md:px-10 lg:px-12 xl:px-16">
-          <div className="flex min-w-0 flex-1 items-center">
-            <a
-              href="#hero"
-              onClick={(e) => {
-                e.preventDefault();
-                handleNav("#hero");
-              }}
-              className="group block shrink-0 transition-opacity duration-300 hover:opacity-90"
-            >
-              <Logo className="h-9 w-auto sm:h-11 md:h-12 lg:h-14" />
-            </a>
-          </div>
+        <nav className="flex min-h-[4.5rem] w-full items-center gap-5 pl-5 pr-5 sm:min-h-[5rem] sm:pl-8 sm:pr-8 lg:gap-10 lg:pl-10 lg:pr-12 xl:pl-12 xl:pr-14">
+          <a
+            href="#hero"
+            onClick={(e) => { e.preventDefault(); go("#hero"); }}
+            className="relative z-10 shrink-0"
+          >
+            <Logo className="h-14 w-auto sm:h-16 md:h-[4.5rem] lg:h-[5rem]" />
+          </a>
 
-          <ul className="hidden shrink-0 items-center gap-5 xl:flex xl:gap-7 2xl:gap-9">
+          <ul className="hidden min-w-0 flex-1 items-center justify-center gap-8 lg:flex xl:gap-10 2xl:gap-12">
             {NAV_LINKS.map((link) => (
-              <li key={link.href}>
+              <li key={link.href} className="shrink-0">
                 <button
-                  onClick={() => handleNav(link.href)}
-                  className="whitespace-nowrap px-1 text-[11px] tracking-[0.18em] uppercase text-white/70 transition-colors hover:text-gold"
+                  onClick={() => go(link.href)}
+                  className="group relative whitespace-nowrap px-2 py-2 text-xs font-bold tracking-[0.16em] uppercase text-charcoal transition-colors duration-500 hover:text-blue xl:text-[13px] xl:tracking-[0.18em]"
                 >
                   {link.label}
+                  <span className="absolute -bottom-1 left-0 h-px w-0 bg-blue transition-all duration-700 group-hover:w-full" />
                 </button>
               </li>
             ))}
           </ul>
 
-          <div className="flex min-w-0 flex-1 items-center justify-end gap-4">
+          <div className="ml-auto flex shrink-0 items-center gap-4 pl-4 lg:ml-0 lg:pl-8 xl:pl-10">
             <a
               href="#enquiry"
-              onClick={(e) => {
-                e.preventDefault();
-                handleNav("#enquiry");
-              }}
-              className="btn-primary hidden shrink-0 !px-6 !py-3 !text-xs xl:inline-flex"
+              onClick={(e) => { e.preventDefault(); go("#enquiry"); }}
+              className="btn-luxury-primary hidden !px-8 !py-4 lg:inline-flex"
             >
               Book Visit
             </a>
-
             <button
+              type="button"
               onClick={() => setOpen(!open)}
-              className="flex h-10 w-10 shrink-0 items-center justify-center border border-white/10 text-white xl:hidden"
-              aria-label="Toggle menu"
+              className="text-charcoal lg:hidden"
+              aria-label="Menu"
             >
-              {open ? <HiX size={22} /> : <HiOutlineMenuAlt3 size={22} />}
+              {open ? <HiX size={26} strokeWidth={1} /> : <HiOutlineMenuAlt3 size={26} strokeWidth={1} />}
             </button>
           </div>
         </nav>
@@ -82,40 +73,29 @@ export default function Navbar() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-40 bg-charcoal/98 backdrop-blur-xl xl:hidden"
+            className="fixed inset-0 z-40 bg-warm-white/98 backdrop-blur-xl lg:hidden"
           >
-            <motion.div
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "spring", damping: 30, stiffness: 300 }}
-              className="flex h-full flex-col justify-center overflow-y-auto px-6 py-24 sm:px-10"
-            >
-              <ul className="flex flex-col gap-5 sm:gap-6">
-                {NAV_LINKS.map((link, i) => (
-                  <motion.li
-                    key={link.href}
-                    initial={{ opacity: 0, x: 40 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.05 }}
-                  >
-                    <button
-                      onClick={() => handleNav(link.href)}
-                      className="font-display text-2xl text-white/90 transition-colors hover:text-gold sm:text-3xl"
-                    >
-                      {link.label}
-                    </button>
-                  </motion.li>
-                ))}
-              </ul>
+            <div className="flex h-full flex-col justify-center px-10">
+              {NAV_LINKS.map((link, i) => (
+                <motion.button
+                  key={link.href}
+                  initial={{ opacity: 0, x: 24 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.06, duration: 0.8 }}
+                  onClick={() => go(link.href)}
+                  className="font-display border-b border-charcoal/8 py-5 text-left text-3xl font-bold text-charcoal"
+                >
+                  {link.label}
+                </motion.button>
+              ))}
               <a
                 href="#enquiry"
-                onClick={(e) => { e.preventDefault(); handleNav("#enquiry"); }}
-                className="btn-primary mt-12 w-full text-center"
+                onClick={(e) => { e.preventDefault(); go("#enquiry"); }}
+                className="btn-luxury-primary btn-luxury-full mt-10 text-center"
               >
                 Book Site Visit
               </a>
-            </motion.div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

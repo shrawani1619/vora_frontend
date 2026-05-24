@@ -1,97 +1,142 @@
+import { useCallback, useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { HiOutlineDownload, HiOutlineHome } from "react-icons/hi";
+import { HiOutlineChevronLeft, HiOutlineChevronRight } from "react-icons/hi";
 import { FLOOR_PLANS } from "../data/content";
-import SectionHeading from "./ui/SectionHeading";
 import LazyImage from "./ui/LazyImage";
 
-export default function FloorPlan() {
+function usePerView() {
+  const [perView, setPerView] = useState(3);
+
+  useEffect(() => {
+    const update = () => {
+      if (window.innerWidth < 640) setPerView(1);
+      else if (window.innerWidth < 1024) setPerView(2);
+      else setPerView(3);
+    };
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
+
+  return perView;
+}
+
+function SiteKey() {
   return (
-    <section id="floor-plans" className="section-padding bg-charcoal-light">
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="mx-auto max-w-7xl"
-      >
-        <SectionHeading
-          eyebrow="Your Space"
-          title="Floor Plans"
-          subtitle="Thoughtfully designed layouts that maximize natural light, ventilation, and livable space."
-        />
+    <div
+      className="absolute top-3 right-3 w-14 border border-charcoal/15 bg-white/90 p-1.5 sm:top-4 sm:right-4 sm:w-16"
+      aria-hidden
+    >
+      <div className="grid grid-cols-2 gap-0.5">
+        {[0, 1, 2, 3].map((i) => (
+          <div
+            key={i}
+            className={`aspect-square bg-charcoal/10 ${i === 1 ? "bg-blue/80" : ""}`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
 
-        <div className="grid gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {FLOOR_PLANS.map((plan, i) => (
-            <motion.article
-              key={plan.type}
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7, delay: i * 0.15 }}
-              whileHover={{ y: -10 }}
-              className={`glass-card group relative overflow-hidden rounded-sm transition-shadow duration-500 ${
-                plan.featured
-                  ? "border-gold/30 shadow-xl shadow-gold/5 md:-mt-4 md:mb-4"
-                  : ""
-              }`}
+export default function FloorPlan() {
+  const perView = usePerView();
+  const maxIndex = Math.max(0, FLOOR_PLANS.length - perView);
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    setIndex((i) => Math.min(i, maxIndex));
+  }, [maxIndex]);
+
+  const prev = useCallback(
+    () => setIndex((i) => (i <= 0 ? maxIndex : i - 1)),
+    [maxIndex]
+  );
+  const next = useCallback(
+    () => setIndex((i) => (i >= maxIndex ? 0 : i + 1)),
+    [maxIndex]
+  );
+
+  const slidePercent = 100 / perView;
+
+  return (
+    <section id="floor-plans" className="section-luxury !pt-12 bg-white sm:!pt-14 md:!pt-16">
+      <div className="container-luxury">
+        <h2 className="font-display text-center text-3xl font-semibold tracking-[0.12em] text-charcoal uppercase sm:text-4xl md:text-5xl">
+          Floor Plans
+        </h2>
+
+        <div className="mt-12 md:mt-16">
+          <div className="flex items-center gap-3 sm:gap-5">
+            <button
+              type="button"
+              onClick={prev}
+              aria-label="Previous floor plans"
+              className="flex h-11 w-11 shrink-0 items-center justify-center border-2 border-charcoal/20 bg-white text-charcoal shadow-sm transition-all hover:border-blue hover:bg-blue hover:text-white sm:h-12 sm:w-12"
             >
-              {plan.featured && (
-                <motion.div className="absolute top-4 right-4 z-10 bg-gold px-3 py-1 text-[10px] tracking-[0.2em] uppercase text-charcoal">
-                  Most Popular
-                </motion.div>
-              )}
+              <HiOutlineChevronLeft size={24} strokeWidth={2} />
+            </button>
 
+            <div className="min-w-0 flex-1 overflow-hidden">
               <motion.div
-                className="relative aspect-[4/3] overflow-hidden"
-                whileHover="hover"
+                animate={{ x: `-${index * slidePercent}%` }}
+                transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+                className="flex"
               >
-                <LazyImage
-                  src={plan.image}
-                  alt={`${plan.type} floor plan interior`}
-                  className="h-full w-full"
-                />
-                <motion.div
-                  variants={{ hover: { scale: 1.08 } }}
-                  transition={{ duration: 0.6 }}
-                  className="absolute inset-0"
-                />
-                <motion.div
-                  className="absolute inset-0 bg-charcoal/60 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-                />
-                <motion.div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-                  <HiOutlineHome className="h-16 w-16 text-gold/80" />
-                </motion.div>
+                {FLOOR_PLANS.map((plan) => (
+                  <article
+                    key={plan.id}
+                    className="w-full shrink-0 px-2 sm:px-3"
+                    style={{ flexBasis: `${slidePercent}%` }}
+                  >
+                    <div className="relative aspect-[4/3] bg-beige p-4 sm:p-6">
+                      <LazyImage
+                        src={plan.image}
+                        alt={plan.title}
+                        className="h-full w-full"
+                        imgClassName="object-contain object-center"
+                      />
+                      <SiteKey />
+                    </div>
+                    <div className="mt-6 px-1 text-center">
+                      <p className="text-base font-bold leading-snug text-charcoal uppercase sm:text-lg">
+                        {plan.title}
+                      </p>
+                      <p className="mt-2 text-sm font-semibold leading-relaxed text-charcoal sm:text-base">
+                        {plan.subtitle}
+                      </p>
+                    </div>
+                  </article>
+                ))}
               </motion.div>
+            </div>
 
-              <div className="p-5 sm:p-6 md:p-8">
-                <h3 className="font-display text-2xl text-white sm:text-3xl">{plan.type}</h3>
-                <p className="mt-2 text-sm text-white/50">{plan.area}</p>
-                <p className="mt-3 font-display text-xl text-gold sm:mt-4 sm:text-2xl">{plan.price}</p>
+            <button
+              type="button"
+              onClick={next}
+              aria-label="Next floor plans"
+              className="flex h-11 w-11 shrink-0 items-center justify-center border-2 border-charcoal/20 bg-white text-charcoal shadow-sm transition-all hover:border-blue hover:bg-blue hover:text-white sm:h-12 sm:w-12"
+            >
+              <HiOutlineChevronRight size={24} strokeWidth={2} />
+            </button>
+          </div>
 
-                <motion.div
-                  className="mt-6 flex gap-6 border-t border-white/10 pt-6"
-                  initial={{ opacity: 0.8 }}
-                  whileHover={{ opacity: 1 }}
-                >
-                  <motion.div whileHover={{ scale: 1.05 }} className="text-center">
-                    <p className="font-display text-2xl text-white">{plan.beds}</p>
-                    <p className="text-[10px] tracking-wider uppercase text-white/40">Bedrooms</p>
-                  </motion.div>
-                  <div className="w-px bg-white/10" />
-                  <motion.div whileHover={{ scale: 1.05 }} className="text-center">
-                    <p className="font-display text-2xl text-white">{plan.baths}</p>
-                    <p className="text-[10px] tracking-wider uppercase text-white/40">Bathrooms</p>
-                  </motion.div>
-                </motion.div>
-
-                <button className="btn-outline mt-8 w-full !text-xs group/btn">
-                  <HiOutlineDownload className="transition-transform group-hover/btn:-translate-y-0.5" />
-                  Download Plan
-                </button>
-              </div>
-            </motion.article>
-          ))}
+          <div className="mt-10 flex justify-center gap-2">
+            {Array.from({ length: maxIndex + 1 }).map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={() => setIndex(i)}
+                aria-label={`Go to slide ${i + 1}`}
+                aria-current={i === index ? "true" : undefined}
+                className={`h-px transition-all duration-500 ${
+                  i === index ? "w-10 bg-blue" : "w-5 bg-charcoal/20 hover:bg-charcoal/40"
+                }`}
+              />
+            ))}
+          </div>
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 }
