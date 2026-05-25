@@ -171,6 +171,15 @@ body {
   color: rgba(200, 169, 107, 0.15);
 }
 
+.glass-card {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.bg-charcoal-light {
+  background: #2a2a2a;
+}
+
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
@@ -234,4 +243,46 @@ body {
   border-color: var(--color-gold-bright);
   transform: translateY(-2px);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+}
+
+/* Horizontal scroll strips (navbar mobile, chat quick replies) */
+.h-scroll {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  touch-action: pan-x;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-blue) rgba(30, 30, 30, 0.1);
+  padding-bottom: 4px;
+}
+
+.h-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+
+.h-scroll::-webkit-scrollbar-track {
+  margin: 0 12px;
+  background: rgba(30, 30, 30, 0.08);
+  border-radius: 999px;
+}
+
+.h-scroll::-webkit-scrollbar-thumb {
+  background: var(--color-blue);
+  border-radius: 999px;
+}
+
+.h-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--color-blue-dark);
+}
+
+.h-scroll-inner {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  width: max-content;
+  gap: 0.5rem;
 }

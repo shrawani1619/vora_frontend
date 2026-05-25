@@ -16,8 +16,8 @@ function MessageBubble({ role, text }) {
       <div
         className={`max-w-[88%] rounded-sm px-4 py-3 text-sm leading-relaxed whitespace-pre-line ${
           isBot
-            ? "glass-card text-white/85"
-            : "border border-gold/30 bg-gold/15 text-white"
+            ? "border border-charcoal/8 bg-beige text-charcoal/90 shadow-sm"
+            : "bg-blue text-white shadow-[0_6px_20px_rgba(13,71,161,0.25)]"
         }`}
       >
         {text}
@@ -37,7 +37,15 @@ export default function Chatbot({ open, onClose }) {
     if (open && messages.length === 0) {
       setMessages([{ id: 1, role: "bot", text: CHATBOT_RESPONSES.greeting }]);
     }
-  }, [open, messages.length]);
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) {
+      setMessages([]);
+      setInput("");
+      setTyping(false);
+    }
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
@@ -96,7 +104,7 @@ export default function Chatbot({ open, onClose }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 z-[55] bg-black/60 backdrop-blur-sm md:bg-black/40"
+            className="fixed inset-0 z-[55] bg-charcoal/25 backdrop-blur-[2px]"
             aria-label="Close chat"
           />
 
@@ -107,18 +115,18 @@ export default function Chatbot({ open, onClose }) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 40, scale: 0.95 }}
             transition={{ type: "spring", damping: 28, stiffness: 320 }}
-            className="fixed inset-x-3 bottom-[5.5rem] z-[60] flex max-h-[min(72dvh,560px)] flex-col overflow-hidden rounded-sm border border-white/10 bg-charcoal shadow-2xl shadow-black/60 sm:inset-x-auto sm:right-5 sm:bottom-24 sm:w-[min(100vw-2rem,400px)] md:right-8"
+            className="fixed inset-x-3 bottom-[5.5rem] z-[60] flex max-h-[min(72dvh,560px)] flex-col overflow-hidden rounded-sm border border-charcoal/10 bg-warm-white shadow-[0_24px_64px_rgba(13,71,161,0.18)] sm:inset-x-auto sm:right-5 sm:bottom-24 sm:w-[min(100vw-2rem,400px)] md:right-8"
           >
             {/* Header */}
-            <div className="flex items-center justify-between border-b border-white/10 bg-charcoal-light px-4 py-3">
+            <div className="flex items-center justify-between border-b border-charcoal/8 bg-gradient-to-r from-blue to-blue-dark px-4 py-3.5">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full border border-gold/30 bg-gold/10">
-                  <HiOutlineChatAlt2 className="h-5 w-5 text-gold" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-full border border-white/25 bg-white/15">
+                  <HiOutlineChatAlt2 className="h-5 w-5 text-white" strokeWidth={1.5} />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-white">Vora Concierge</p>
-                  <p className="flex items-center gap-1.5 text-[10px] text-gold">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                  <p className="text-sm font-semibold text-white">Vora Concierge</p>
+                  <p className="flex items-center gap-1.5 text-[10px] font-medium text-white/80">
+                    <span className="h-1.5 w-1.5 rounded-full bg-gold-bright" />
                     Online now
                   </p>
                 </div>
@@ -126,20 +134,20 @@ export default function Chatbot({ open, onClose }) {
               <button
                 type="button"
                 onClick={onClose}
-                className="flex h-9 w-9 items-center justify-center text-white/60 transition-colors hover:text-gold"
+                className="flex h-9 w-9 items-center justify-center text-white/80 transition-colors hover:text-white"
                 aria-label="Close chat"
               >
-                <HiOutlineX size={22} />
+                <HiOutlineX size={22} strokeWidth={1.5} />
               </button>
             </div>
 
             {/* Messages */}
             <div
               ref={scrollRef}
-              className="flex flex-1 flex-col gap-3 overflow-y-auto p-4"
+              className="flex flex-1 flex-col gap-3 overflow-y-auto bg-white p-4"
             >
-              <div className="mb-2 flex justify-center">
-                <Logo className="h-10 w-auto opacity-90" />
+              <div className="mb-1 flex justify-center border-b border-charcoal/6 pb-3">
+                <Logo className="h-10 w-auto" />
               </div>
 
               {messages.map((msg) => (
@@ -148,35 +156,46 @@ export default function Chatbot({ open, onClose }) {
 
               {typing && (
                 <div className="flex justify-start">
-                  <div className="glass-card flex gap-1 rounded-sm px-4 py-3">
-                    <span className="h-2 w-2 animate-bounce rounded-full bg-gold/60 [animation-delay:0ms]" />
-                    <span className="h-2 w-2 animate-bounce rounded-full bg-gold/60 [animation-delay:150ms]" />
-                    <span className="h-2 w-2 animate-bounce rounded-full bg-gold/60 [animation-delay:300ms]" />
+                  <div className="flex gap-1 rounded-sm border border-charcoal/8 bg-beige px-4 py-3 shadow-sm">
+                    <span className="h-2 w-2 animate-bounce rounded-full bg-blue/50 [animation-delay:0ms]" />
+                    <span className="h-2 w-2 animate-bounce rounded-full bg-blue/50 [animation-delay:150ms]" />
+                    <span className="h-2 w-2 animate-bounce rounded-full bg-blue/50 [animation-delay:300ms]" />
                   </div>
                 </div>
               )}
             </div>
 
             {/* Quick replies */}
-            <div className="hide-scrollbar flex gap-2 overflow-x-auto border-t border-white/5 px-3 py-2">
-              {CHATBOT_QUICK_REPLIES.map((q) => (
-                <button
-                  key={q.id}
-                  type="button"
-                  onClick={() => handleQuickReply(q.id)}
-                  disabled={typing}
-                  className="shrink-0 rounded-sm border border-white/10 px-3 py-1.5 text-[10px] tracking-wider uppercase text-white/70 transition-colors hover:border-gold/40 hover:text-gold disabled:opacity-50"
-                >
-                  {q.label}
-                </button>
-              ))}
+            <div className="relative border-t border-charcoal/8 bg-warm-white/80">
+              <p className="px-3 pt-2 text-[9px] font-medium tracking-[0.14em] text-charcoal/45 uppercase">
+                Quick questions — scroll for more
+              </p>
+              <div className="h-scroll w-full min-w-0">
+                <div className="h-scroll-inner gap-2 px-3 py-1">
+                  {CHATBOT_QUICK_REPLIES.map((q) => (
+                    <button
+                      key={q.id}
+                      type="button"
+                      onClick={() => handleQuickReply(q.id)}
+                      disabled={typing}
+                      className="inline-flex min-h-[34px] shrink-0 items-center justify-center rounded-full border border-charcoal/12 bg-white px-3.5 py-2 text-[10px] font-semibold leading-none tracking-[0.12em] text-charcoal/75 uppercase transition-all hover:border-blue hover:text-blue disabled:opacity-50"
+                    >
+                      {q.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div
+                className="pointer-events-none absolute top-6 right-0 bottom-2 w-10 bg-gradient-to-l from-warm-white to-transparent"
+                aria-hidden
+              />
             </div>
 
             {/* CTA strip */}
             <button
               type="button"
               onClick={goToEnquiry}
-              className="border-t border-gold/20 bg-gold/5 px-4 py-2.5 text-center text-[10px] tracking-[0.2em] uppercase text-gold transition-colors hover:bg-gold/10"
+              className="border-t border-gold-bright/30 bg-gold-bright/10 px-4 py-2.5 text-center text-[10px] font-semibold tracking-[0.2em] text-gold-dark uppercase transition-colors hover:bg-gold-bright/20"
             >
               Book Site Visit →
             </button>
@@ -184,23 +203,23 @@ export default function Chatbot({ open, onClose }) {
             {/* Input */}
             <form
               onSubmit={handleSend}
-              className="flex items-center gap-2 border-t border-white/10 p-3"
+              className="flex items-center gap-2 border-t border-charcoal/8 bg-white p-3"
             >
               <input
                 ref={inputRef}
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="Type your message..."
-                className="min-w-0 flex-1 border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white placeholder-white/30 outline-none focus:border-gold/40"
+                placeholder="Ask about floor plans, pricing..."
+                className="min-w-0 flex-1 rounded-sm border border-charcoal/12 bg-warm-white px-3 py-2.5 text-sm text-charcoal placeholder-charcoal/40 outline-none transition-colors focus:border-blue"
               />
               <button
                 type="submit"
                 disabled={!input.trim() || typing}
-                className="flex h-10 w-10 shrink-0 items-center justify-center bg-gold text-charcoal transition-opacity disabled:opacity-40"
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-sm bg-blue text-white shadow-md transition-all hover:bg-blue-dark disabled:opacity-40"
                 aria-label="Send message"
               >
-                <HiOutlinePaperAirplane size={18} />
+                <HiOutlinePaperAirplane size={18} strokeWidth={1.5} />
               </button>
             </form>
           </motion.div>

@@ -197,9 +197,9 @@ export const TESTIMONIALS = [
 ];
 
 export const CONTACT = {
-  phone: "+91 98765 43210",
+  phone: "+91 9666290888",
   whatsapp: "919876543210",
-  email: "hello@vorarealtors.com",
+  email: "Sales@vorarealtors.com",
   address: "Vora Signature Residences, Financial District, Hyderabad – 500032",
   rera: "P02400001234",
 };
